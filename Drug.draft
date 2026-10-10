@@ -1,0 +1,63 @@
+class Drug {
+  final int? id;
+  final String name;
+  final String category;
+  final String batchNumber;
+  final String supplier;
+  final int quantity;
+  final double costPrice;
+  final double sellingPrice;
+  final String expiryDate;
+  final String? notes;
+
+  Drug({
+    this.id,
+    required this.name,
+    required this.category,
+    required this.batchNumber,
+    required this.supplier,
+    required this.quantity,
+    required this.costPrice,
+    required this.sellingPrice,
+    required this.expiryDate,
+    this.notes,
+  });
+
+  double get profitPerUnit => sellingPrice - costPrice;
+  double get profitMargin => sellingPrice > 0 ? (profitPerUnit / sellingPrice) * 100 : 0;
+  double get totalCostValue => quantity * costPrice;
+  double get totalSellingValue => quantity * sellingPrice;
+  double get totalProfit => quantity * profitPerUnit;
+  bool get isLoss => profitPerUnit < 0;
+
+  DateTime get expiry => DateTime.parse(expiryDate);
+  int get daysToExpiry => expiry.difference(DateTime.now()).inDays;
+  bool get isExpired => daysToExpiry < 0;
+  bool get isExpiringSoon => daysToExpiry >= 0 && daysToExpiry <= 30;
+
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'name': name,
+        'category': category,
+        'batchNumber': batchNumber,
+        'supplier': supplier,
+        'quantity': quantity,
+        'costPrice': costPrice,
+        'sellingPrice': sellingPrice,
+        'expiryDate': expiryDate,
+        'notes': notes,
+      };
+
+  factory Drug.fromMap(Map<String, dynamic> m) => Drug(
+        id: m['id'],
+        name: m['name'],
+        category: m['category'],
+        batchNumber: m['batchNumber'],
+        supplier: m['supplier'],
+        quantity: m['quantity'],
+        costPrice: (m['costPrice'] as num).toDouble(),
+        sellingPrice: (m['sellingPrice'] as num).toDouble(),
+        expiryDate: m['expiryDate'],
+        notes: m['notes'],
+      );
+}
